@@ -1,5 +1,4 @@
 'use strict';
-const someDep = require('animate.css');
 
 module.exports = function (nodecg) {
 	// An array of alerts and their settings
