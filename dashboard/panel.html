@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+  <div id=alerts-wrap>
+  </div>
+  <form id="newAlert">
+     <button type="submit">Add New Alert</button>
+  </form>
+	<script>
+    const alerts = nodecg.Replicant('alerts');
+    const art = nodecg.Replicant('assets:media-graphics');
+
+    // Iterate thru each user created alert and generate a menu.
+    alerts.on('change', value => {
+      value.forEach(showPanels);
+    });
+
+    function showPanels(value, index, array) {
+      const div = document.getElementById('alerts-wrap');
+
+      var form = document.createElement('form');
+      form.setAttribute('id', 'alert' + index);
+      var name = document.createElement('label');
+      name.setAttribute('for', 'alert' + index + 'Name');
+      var nameLabel = document.createTextNode("Alert Name");
+      name.appendChild(nameLabel);
+      var nameInput = document.createElement('input');
+      nameInput.setAttribute('id', 'alert' + index + 'Name');
+      var str = document.createElement('label');
+      str.setAttribute('for', 'str' + index);
+      var strLabel = document.createTextNode("Place message here, place keywords in curly brackets.");
+      str.appendChild(strLabel);
+      var strInput = document.createElement('input');
+      strInput.setAttribute('id', 'str' + index);
+      var alertSubmit = document.createElement('button');
+      alertSubmit.setAttribute('type', 'submit');
+      alertSubmit.setAttribute('id', 'submitBtn' + index);
+      var buttonLabel = document.createTextNode("Submit");
+      alertSubmit.appendChild(buttonLabel);
+      var alertDelete = document.createElement('button');
+      var deleteWrap = document.createElement('div');
+      alertDelete.setAttribute('id', 'deleteBtn' + index);
+      var deleteLabel = document.createTextNode("DELETE");
+      alertDelete.appendChild(deleteLabel);
+      var durationLabel = document.createElement('label');
+      durationLabel.setAttribute('for', 'duration' + index);
+      durationLabel.appendChild(document.createTextNode("Duration of Alert in ms"));
+      var duration = document.createElement('input');
+      duration.setAttribute('id', 'duration' + index);
+
+      var select = document.createElement('select');
+      select.setAttribute('id', 'select' + index);
+      var selectLabel = document.createElement('label');
+      selectLabel.setAttribute('for', 'select' + index);
+      selectLabel.appendChild(document.createTextNode("Media"));
+      art.on('change', v => {
+        v.forEach(populateList);
+      });    
+
+      form.appendChild(name);
+      form.appendChild(nameInput);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(str);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(strInput);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(selectLabel);
+      form.appendChild(select);
+      form.appendChild(durationLabel);
+      form.appendChild(duration);
+      form.appendChild(alertSubmit);
+      form.appendChild(alertDelete);
+
+      div.appendChild(form);
+
+      document.getElementById('alert' + index + 'Name').value = value.name;
+      document.getElementById('str' + index).value = value.message;
+      document.getElementById('duration' + index).value = value.duration;
+      document.getElementById('select' + index).value = value.media;
+      document.getElementById('deleteBtn' + index).addEventListener('click', e => {
+        alerts.value.splice(index, 1);
+      });
+      document.getElementById('alert' + index).addEventListener('submit', e => {
+        e.preventDefault();
+        value.name = document.getElementById('alert' + index + 'Name').value;
+        value.message = document.getElementById('str' + index).value;
+        value.duration = document.getElementById('duration' + index).value;
+        value.media = document.getElementById('select' + index).value;
+      });
+      // Populate the asset menu
+      function populateList(value, index, array) {
+        var option = document.createElement('option');
+        option.setAttribute('value', index);
+        var optionLabel = document.createTextNode(value.base);
+        option.appendChild(optionLabel);
+        select.appendChild(option);
+      }
+    }
+    // Create a new alert.
+    document.getElementById('newAlert').addEventListener('click', e => {
+      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000});
+    });
+	</script>
+</body>
+</html>

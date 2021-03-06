@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>simple-alerts</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/tip.css"/>
+  <link rel="stylesheet" href="css/animate.css"/>
+  <link rel="stylesheet" href="css/text-animations.css"/>
+</head>
+<body>
+  <div id="alert-wrapper">
+    <!-- alert image -->
+    <div id="alert-image-wrap">
+    <div id="alert-image" style="background-image: none;">
+
+    </div>
+
+    <!-- main alert box window -->
+    <div id="alert-text-wrap">
+
+      <!-- alert text -->
+      <div id="alert-text">
+
+        <!-- alert message -->
+        <!-- messageTemplate will be replaced with your message template -->
+        <!-- for example : {name} is now following! or {name} donated {amount} -->
+        <div id="alert-message">
+          <span style="color: rgb(79, 230, 57); position: relative;">
+            <span class="animated-letter rubberBand">H</span>
+            <span class="animated-letter rubberBand">e</span>
+            <span class="animated-letter rubberBand">l</span>
+            <span class="animated-letter rubberBand">l</span>
+            <span class="animated-letter rubberBand">o</span>
+          </span>
+          <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'>An animated element</div>
+        </div>
+      </div>
+    </div>
+</div>
+  <script>
+    function sleep(ms) {
+    return new Promise(
+      resolve => setTimeout(resolve, ms)
+    );
+    }
+    const activeAlert = nodecg.Replicant('activeAlert');
+    const message = nodecg.Replicant('alerts');
+    const media = nodecg.Replicant('assets:media-graphics');
+    var div = document.getElementById('alert-wrapper');
+    message.on('change', value => {
+      // Should add a isAlertPlaying function to queue alerts.
+      if (div.style.display === "none") {
+        div.style.display = "block";
+      }
+      // Handle media
+      media.on('change', v => {
+        console.log("Alert has media:");
+        console.log(v[value[activeAlert.value].media].ext);
+
+        if (v[value[activeAlert.value].media].ext === ".webm") {
+          console.log("isVideo");
+          var video = document.createElement("video");
+          video.setAttribute("id", "webm-video");
+          video.setAttribute("autoplay", "autoplay");
+          video.setAttribute("muted", "muted");
+          video.setAttribute("loop", "loop");
+          video.setAttribute("src", v[value[activeAlert.value].media].url);
+          document.getElementById('alert-image').appendChild(video)
+          document.getElementById('webm-video').play();
+        }
+      });
+      var duration = value[activeAlert.value].duration;
+      document.getElementById('alert-user-message').innerHTML = value[activeAlert.value].message;
+      sleep(duration).then(() => {
+          div.style.display = "none";
+          console.log("HIDE")
+      });
+    });
+  </script>
+</body>
+</html>

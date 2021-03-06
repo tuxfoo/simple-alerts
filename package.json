@@ -1,0 +1,39 @@
+{
+  "name": "simple-alerts",
+  "version": "0.0.0",
+  "files": [
+    "dashboard",
+    "graphics",
+    "extension.js",
+    "extension"
+  ],
+  "dependencies": {
+    "animate.css": "^4.0.0"
+  },
+  "nodecg": {
+    "compatibleRange": "^1.1.1",
+    "dashboardPanels": [
+      {
+        "name": "panel",
+        "title": "simple-alerts",
+        "width": 5,
+        "file": "panel.html",
+        "headerColor": "#525F78"
+      }
+    ],
+    "graphics": [
+      {
+        "file": "index.html",
+        "width": 1920,
+        "height": 1080
+      }
+    ],
+    "assetCategories": [
+      {
+        "name": "media-graphics",
+        "title": "Graphics",
+        "allowedTypes": ["jpg", "jpeg", "gif", "png", "webm"]
+      }
+    ]
+  }
+}
