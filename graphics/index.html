@@ -9,30 +9,18 @@
 </head>
 <body>
   <div id="alert-wrapper">
-    <!-- alert image -->
     <div id="alert-image-wrap">
     <div id="alert-image" style="background-image: none;">
 
     </div>
 
-    <!-- main alert box window -->
     <div id="alert-text-wrap">
 
-      <!-- alert text -->
       <div id="alert-text">
 
-        <!-- alert message -->
-        <!-- messageTemplate will be replaced with your message template -->
-        <!-- for example : {name} is now following! or {name} donated {amount} -->
         <div id="alert-message">
-          <span style="color: rgb(79, 230, 57); position: relative;">
-            <span class="animated-letter rubberBand">H</span>
-            <span class="animated-letter rubberBand">e</span>
-            <span class="animated-letter rubberBand">l</span>
-            <span class="animated-letter rubberBand">l</span>
-            <span class="animated-letter rubberBand">o</span>
-          </span>
-          <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'>An animated element</div>
+
+          <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'></div>
         </div>
       </div>
     </div>
@@ -43,6 +31,19 @@
       resolve => setTimeout(resolve, ms)
     );
     }
+    function animateText(word) {
+      var span = document.createElement("span");
+      span.setAttribute("style", "color: rgb(79, 230, 57); position: relative;");
+      for (var i = 0; i < word.length; i++) {
+        var letter = document.createElement("span");
+        letter.setAttribute("class", "animated-letter rubberBand");
+        letter.appendChild(document.createTextNode(word.charAt(i)));
+        span.appendChild(letter);
+      }
+      return span;
+    }
+    var alertMessage = document.getElementById("alert-message");
+
     const activeAlert = nodecg.Replicant('activeAlert');
     const message = nodecg.Replicant('alerts');
     const media = nodecg.Replicant('assets:media-graphics');
@@ -70,10 +71,45 @@
         }
       });
       var duration = value[activeAlert.value].duration;
-      document.getElementById('alert-user-message').innerHTML = value[activeAlert.value].message;
+      var re = /\(.*?\)/g;
+      var message = value[activeAlert.value].message;
+      var keywords = message.matchAll(re);
+      var userMessage = document.getElementById('alert-user-message');
+      message = message.replace(re, "");
+      var count = 0;
+      var lastKeyword = 0;
+      for ( var keyword of keywords ) {
+        console.log(keyword.index);
+        // Check to see if a keyword is first in message.
+        if ( keyword.index != 0 ) {
+          var messageElement = document.createElement("span");
+          var messageText = document.createTextNode(message.slice(0, keyword.index + count));
+          count = count - (keyword[0].length + keyword.index);
+          message = message.replace(message.slice(0, keyword.index), "");
+          messageElement.appendChild(messageText);
+          userMessage.appendChild(messageElement);
+        } else {
+          count = count - (keyword[0].length + keyword.index);
+        }
+        keyword[0] = keyword[0].replace("(", "");
+        keyword[0] = keyword[0].replace(")", "");
+        userMessage.appendChild(animateText(keyword[0]));
+        lastKeyword = keyword.index + keyword[0].length + 2;
+      }
+      // If a keyword is not last, add the rest of the message.
+      if ( lastKeyword < value[activeAlert.value].message.length ) {
+        messageElement = document.createElement("span");
+        messageText = document.createTextNode(value[activeAlert.value].message.slice(lastKeyword, value[activeAlert.value].message.length));
+        messageElement.appendChild(messageText);
+        userMessage.appendChild(messageElement);
+      }
       sleep(duration).then(() => {
           div.style.display = "none";
-          console.log("HIDE")
+          if (media.value[value[activeAlert.value].media].ext === ".webm") {
+            var video = document.getElementById('webm-video');
+            video.parentNode.removeChild(video);
+          }
+          console.log("HIDE");
       });
     });
   </script>

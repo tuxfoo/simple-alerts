@@ -5,6 +5,7 @@
     "dashboard",
     "graphics",
     "extension.js",
+    "api.js",
     "extension"
   ],
   "dependencies": {
@@ -32,7 +33,13 @@
       {
         "name": "media-graphics",
         "title": "Graphics",
-        "allowedTypes": ["jpg", "jpeg", "gif", "png", "webm"]
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "gif",
+          "png",
+          "webm"
+        ]
       }
     ]
   }
