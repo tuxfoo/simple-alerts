@@ -13,12 +13,14 @@
     const alerts = nodecg.Replicant('alerts');
     const art = nodecg.Replicant('assets:media-graphics');
     // If the change is removal, do not run showPanels
-    const removeChange = false;
+    var removeChange = false;
     // Iterate thru each user created alert and generate a menu.
     alerts.on('change', value => {
       console.log("changed");
-      if (removeChange === false) {
+      if (removeChange == false) {
         value.forEach(showPanels);
+      } else {
+        removeChange = false;
       }
     });
 
@@ -86,16 +88,21 @@
       document.getElementById('str' + index).value = value.message;
       document.getElementById('duration' + index).value = value.duration;
       document.getElementById('select' + index).value = value.media;
+      // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
         console.log("remove " + index);
         alerts.value.splice(index, 1);
+        removeChange = false;
       });
-      document.getElementById('alert' + index).addEventListener('submit', e => {
+      // Submit change
+      document.getElementById('submitBtn' + index).addEventListener('click', e => {
         e.preventDefault();
+        console.log("Submit alert " + index)
         value.name = document.getElementById('alert' + index + 'Name').value;
         value.message = document.getElementById('str' + index).value;
         value.duration = document.getElementById('duration' + index).value;
         value.media = document.getElementById('select' + index).value;
+        removeChange = true;
       });
       // Populate the asset menu
       function populateList(value, index, array) {
