@@ -75,31 +75,25 @@
       var message = value[activeAlert.value].message;
       var keywords = message.matchAll(re);
       var userMessage = document.getElementById('alert-user-message');
-      message = message.replace(re, "");
-      var count = 0;
       var lastKeyword = 0;
       for ( var keyword of keywords ) {
-        console.log(keyword.index);
         // Check to see if a keyword is first in message.
         if ( keyword.index != 0 ) {
           var messageElement = document.createElement("span");
-          var messageText = document.createTextNode(message.slice(0, keyword.index + count));
-          count = count - (keyword[0].length + keyword.index);
-          message = message.replace(message.slice(0, keyword.index), "");
+          var messageText = document.createTextNode(message.slice(lastKeyword + 2, keyword.index));
           messageElement.appendChild(messageText);
           userMessage.appendChild(messageElement);
-        } else {
-          count = count - (keyword[0].length + keyword.index);
         }
+        console.log(message);
         keyword[0] = keyword[0].replace("(", "");
         keyword[0] = keyword[0].replace(")", "");
         userMessage.appendChild(animateText(keyword[0]));
-        lastKeyword = keyword.index + keyword[0].length + 2;
+        lastKeyword = keyword.index + keyword[0].length;
       }
       // If a keyword is not last, add the rest of the message.
       if ( lastKeyword < value[activeAlert.value].message.length ) {
         messageElement = document.createElement("span");
-        messageText = document.createTextNode(value[activeAlert.value].message.slice(lastKeyword, value[activeAlert.value].message.length));
+        messageText = document.createTextNode(value[activeAlert.value].message.slice(lastKeyword + 2, message.length));
         messageElement.appendChild(messageText);
         userMessage.appendChild(messageElement);
       }
