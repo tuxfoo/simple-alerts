@@ -26,11 +26,22 @@
     </div>
 </div>
   <script>
+    var alertMessage = document.getElementById("alert-message");
+
+    const activeAlert = nodecg.Replicant('activeAlert');
+    const alerts = nodecg.Replicant('alerts');
+    const media = nodecg.Replicant('assets:media-graphics');
+    const isAlertPlaying = nodecg.Replicant("isAlertPlaying");
+    const alertQueue = nodecg.Replicant("alertQueue");
+    const activateAlert = nodecg.Replicant("activateAlert");
+    var div = document.getElementById('alert-wrapper');
+
     function sleep(ms) {
-    return new Promise(
-      resolve => setTimeout(resolve, ms)
-    );
+      return new Promise(
+        resolve => setTimeout(resolve, ms)
+      );
     }
+
     function animateText(word) {
       var span = document.createElement("span");
       span.setAttribute("style", "color: rgb(79, 230, 57); position: relative;");
@@ -42,68 +53,108 @@
       }
       return span;
     }
-    var alertMessage = document.getElementById("alert-message");
 
-    const activeAlert = nodecg.Replicant('activeAlert');
-    const message = nodecg.Replicant('alerts');
-    const media = nodecg.Replicant('assets:media-graphics');
-    var div = document.getElementById('alert-wrapper');
-    message.on('change', value => {
-      // Should add a isAlertPlaying function to queue alerts.
-      if (div.style.display === "none") {
-        div.style.display = "block";
-      }
-      // Handle media
-      media.on('change', v => {
-        console.log("Alert has media:");
-        console.log(v[value[activeAlert.value].media].ext);
+    function getMedia(ind) {
+      return alerts.value[ind].media;
+    }
 
-        if (v[value[activeAlert.value].media].ext === ".webm") {
+    function getMediaExt(ind) {
+      return media.value[getMedia(ind)].ext;
+    }
+
+    function getDuration(ind) {
+      return alerts.value[ind].duration
+    }
+
+    function getMessage(ind) {
+      return activateAlert.value.message;
+    }
+
+    function clearMessage(ind) {
+      activateAlert.value.message = "";
+    }
+
+    function getMediaURL(ind) {
+      return media.value[getMedia(ind)].url;
+    }
+
+    NodeCG.waitForReplicants(alerts, activateAlert, media).then(() => {
+      console.log('messages are fully declared and ready to use!');
+
+      activateAlert.on('change', value => {
+        isAlertPlaying.value = true;
+        // Should add a isAlertPlaying function to queue alerts.
+        if (div.style.display === "none") {
+          div.style.display = "block";
+        }
+
+        var message = getMessage(activeAlert.value);
+
+        // Handle media
+        console.log(getMediaExt(activeAlert.value));
+        if (getMediaExt(activeAlert.value) === ".webm") {
+          console.log("Alert has media:");
           console.log("isVideo");
           var video = document.createElement("video");
           video.setAttribute("id", "webm-video");
           video.setAttribute("autoplay", "autoplay");
           video.setAttribute("muted", "muted");
           video.setAttribute("loop", "loop");
-          video.setAttribute("src", v[value[activeAlert.value].media].url);
+          video.setAttribute("src", getMediaURL(activeAlert.value));
           document.getElementById('alert-image').appendChild(video)
           document.getElementById('webm-video').play();
         }
-      });
-      var duration = value[activeAlert.value].duration;
-      var re = /\(.*?\)/g;
-      var message = value[activeAlert.value].message;
-      var keywords = message.matchAll(re);
-      var userMessage = document.getElementById('alert-user-message');
-      var lastKeyword = 0;
-      for ( var keyword of keywords ) {
-        // Check to see if a keyword is first in message.
-        if ( keyword.index != 0 ) {
-          var messageElement = document.createElement("span");
-          var messageText = document.createTextNode(message.slice(lastKeyword + 2, keyword.index));
+
+        var duration = getDuration(activeAlert.value);
+        var re = /\(.*?\)/g;
+        var keywords = message.matchAll(re);
+        var userMessage = document.getElementById('alert-user-message');
+        var lastKeyword = 0;
+        var count = 0;
+        for ( var keyword of keywords ) {
+          // Check to see if a keyword is first in message.
+          if ( keyword.index != 0 ) {
+            var messageElement = document.createElement("span");
+            if (count != 0) {
+              var messageText = document.createTextNode(message.slice(lastKeyword + 2, keyword.index));
+            } else {
+              var messageText = document.createTextNode(message.slice(lastKeyword, keyword.index));
+            }
+            messageElement.appendChild(messageText);
+            userMessage.appendChild(messageElement);
+          }
+          console.log(message);
+          keyword[0] = keyword[0].replace("(", "");
+          keyword[0] = keyword[0].replace(")", "");
+          userMessage.appendChild(animateText(keyword[0]));
+          lastKeyword = keyword.index + keyword[0].length;
+          count = count + 1;
+        }
+        // If a keyword is not last, add the rest of the message.
+        if ( lastKeyword < getMessage(activeAlert.value).length ) {
+          messageElement = document.createElement("span");
+          messageText = document.createTextNode(getMessage(activeAlert.value).slice(lastKeyword + 2, message.length));
           messageElement.appendChild(messageText);
           userMessage.appendChild(messageElement);
         }
-        console.log(message);
-        keyword[0] = keyword[0].replace("(", "");
-        keyword[0] = keyword[0].replace(")", "");
-        userMessage.appendChild(animateText(keyword[0]));
-        lastKeyword = keyword.index + keyword[0].length;
-      }
-      // If a keyword is not last, add the rest of the message.
-      if ( lastKeyword < value[activeAlert.value].message.length ) {
-        messageElement = document.createElement("span");
-        messageText = document.createTextNode(value[activeAlert.value].message.slice(lastKeyword + 2, message.length));
-        messageElement.appendChild(messageText);
-        userMessage.appendChild(messageElement);
-      }
-      sleep(duration).then(() => {
-          div.style.display = "none";
-          if (media.value[value[activeAlert.value].media].ext === ".webm") {
-            var video = document.getElementById('webm-video');
-            video.parentNode.removeChild(video);
+        sleep(duration).then(() => {
+            //clearMessage(activateAlert.value);
+            div.style.display = "none";
+            if (media.value[getMedia(activeAlert.value)].ext === ".webm") {
+              var video2 = document.getElementById('webm-video');
+              video2.parentNode.removeChild(video);
+            }
+            var msg = document.getElementById('alert-user-message');
+            removeAllChildren(msg);
+            console.log("HIDE");
+            isAlertPlaying.value = false;
+        });
+
+        function removeAllChildren(parent) {
+          while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
           }
-          console.log("HIDE");
+        }
       });
     });
   </script>

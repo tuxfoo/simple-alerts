@@ -26,63 +26,62 @@
 
     function showPanels(value, index, array) {
       var alreadyExists = document.getElementById('alert' + index)
+      const div = document.getElementById('alerts-wrap');
+      console.log("creating " + index);
+      var form = document.createElement('form');
+      form.setAttribute('id', 'alert' + index);
+      var name = document.createElement('label');
+      name.setAttribute('for', 'alert' + index + 'Name');
+      var nameLabel = document.createTextNode("Alert Name");
+      name.appendChild(nameLabel);
+      var nameInput = document.createElement('input');
+      nameInput.setAttribute('id', 'alert' + index + 'Name');
+      var str = document.createElement('label');
+      str.setAttribute('for', 'str' + index);
+      var strLabel = document.createTextNode("Place test message here, place keywords in curly brackets.");
+      str.appendChild(strLabel);
+      var strInput = document.createElement('input');
+      strInput.setAttribute('id', 'str' + index);
+      var alertSubmit = document.createElement('button');
+      alertSubmit.setAttribute('type', 'submit');
+      alertSubmit.setAttribute('id', 'submitBtn' + index);
+      var buttonLabel = document.createTextNode("Submit");
+      alertSubmit.appendChild(buttonLabel);
+      var alertDelete = document.createElement('button');
+      var deleteWrap = document.createElement('div');
+      alertDelete.setAttribute('id', 'deleteBtn' + index);
+      var deleteLabel = document.createTextNode("DELETE");
+      alertDelete.appendChild(deleteLabel);
+      var durationLabel = document.createElement('label');
+      durationLabel.setAttribute('for', 'duration' + index);
+      durationLabel.appendChild(document.createTextNode("Duration of Alert in ms"));
+      var duration = document.createElement('input');
+      duration.setAttribute('id', 'duration' + index);
 
-        const div = document.getElementById('alerts-wrap');
-        console.log("creating " + index);
-        var form = document.createElement('form');
-        form.setAttribute('id', 'alert' + index);
-        var name = document.createElement('label');
-        name.setAttribute('for', 'alert' + index + 'Name');
-        var nameLabel = document.createTextNode("Alert Name");
-        name.appendChild(nameLabel);
-        var nameInput = document.createElement('input');
-        nameInput.setAttribute('id', 'alert' + index + 'Name');
-        var str = document.createElement('label');
-        str.setAttribute('for', 'str' + index);
-        var strLabel = document.createTextNode("Place test message here, place keywords in curly brackets.");
-        str.appendChild(strLabel);
-        var strInput = document.createElement('input');
-        strInput.setAttribute('id', 'str' + index);
-        var alertSubmit = document.createElement('button');
-        alertSubmit.setAttribute('type', 'submit');
-        alertSubmit.setAttribute('id', 'submitBtn' + index);
-        var buttonLabel = document.createTextNode("Submit");
-        alertSubmit.appendChild(buttonLabel);
-        var alertDelete = document.createElement('button');
-        var deleteWrap = document.createElement('div');
-        alertDelete.setAttribute('id', 'deleteBtn' + index);
-        var deleteLabel = document.createTextNode("DELETE");
-        alertDelete.appendChild(deleteLabel);
-        var durationLabel = document.createElement('label');
-        durationLabel.setAttribute('for', 'duration' + index);
-        durationLabel.appendChild(document.createTextNode("Duration of Alert in ms"));
-        var duration = document.createElement('input');
-        duration.setAttribute('id', 'duration' + index);
+      var select = document.createElement('select');
+      select.setAttribute('id', 'select' + index);
+      var selectLabel = document.createElement('label');
+      selectLabel.setAttribute('for', 'select' + index);
+      selectLabel.appendChild(document.createTextNode("Media"));
+      art.on('change', v => {
+        v.forEach(populateList);
+      });
 
-        var select = document.createElement('select');
-        select.setAttribute('id', 'select' + index);
-        var selectLabel = document.createElement('label');
-        selectLabel.setAttribute('for', 'select' + index);
-        selectLabel.appendChild(document.createTextNode("Media"));
-        art.on('change', v => {
-          v.forEach(populateList);
-        });
+      form.appendChild(name);
+      form.appendChild(nameInput);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(str);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(strInput);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(selectLabel);
+      form.appendChild(select);
+      form.appendChild(durationLabel);
+      form.appendChild(duration);
+      form.appendChild(alertSubmit);
+      form.appendChild(alertDelete);
 
-        form.appendChild(name);
-        form.appendChild(nameInput);
-        form.appendChild(document.createElement("br"));
-        form.appendChild(str);
-        form.appendChild(document.createElement("br"));
-        form.appendChild(strInput);
-        form.appendChild(document.createElement("br"));
-        form.appendChild(selectLabel);
-        form.appendChild(select);
-        form.appendChild(durationLabel);
-        form.appendChild(duration);
-        form.appendChild(alertSubmit);
-        form.appendChild(alertDelete);
-
-        div.appendChild(form);
+      div.appendChild(form);
 
       document.getElementById('alert' + index + 'Name').value = value.name;
       document.getElementById('str' + index).value = value.message;
