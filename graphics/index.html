@@ -8,19 +8,21 @@
   <link rel="stylesheet" href="css/text-animations.css"/>
 </head>
 <body>
-  <div id="alert-wrapper">
-    <div id="alert-image-wrap">
-    <div id="alert-image" style="background-image: none;">
+  <div id="alert-box" class="widget-AlertBox" data-layout="banner">
+    <div id="alert-wrapper">
+      <div id="alert-image-wrap">
+      <div id="alert-image" style="background-image: none;">
 
-    </div>
+      </div>
 
-    <div id="alert-text-wrap">
+      <div id="alert-text-wrap">
 
-      <div id="alert-text">
+        <div id="alert-text">
 
-        <div id="alert-message">
+          <div id="alert-message">
 
-          <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'></div>
+            <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'></div>
+          </div>
         </div>
       </div>
     </div>
@@ -101,8 +103,14 @@
           video.setAttribute("muted", "muted");
           video.setAttribute("loop", "loop");
           video.setAttribute("src", getMediaURL(activeAlert.value));
-          document.getElementById('alert-image').appendChild(video)
+          document.getElementById('alert-image').appendChild(video);
           document.getElementById('webm-video').play();
+        } else if (getMediaExt(activeAlert.value) === ".gif") {
+          //var image = document.createElement("img");
+          var imageElement = document.getElementById("alert-image");
+          imageElement.setAttribute("style", "background-image: " + "url(\"" + getMediaURL(activeAlert.value) + "\");");
+          //image.setAttribute("src", getMediaURL(activeAlert.value));
+          //document.getElementById('alert-image').appendChild(image);
         }
 
         var duration = getDuration(activeAlert.value);

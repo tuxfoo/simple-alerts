@@ -32,7 +32,7 @@
       form.setAttribute('id', 'alert' + index);
       var name = document.createElement('label');
       name.setAttribute('for', 'alert' + index + 'Name');
-      var nameLabel = document.createTextNode("Alert Name");
+      var nameLabel = document.createTextNode("Alert Name: ");
       name.appendChild(nameLabel);
       var nameInput = document.createElement('input');
       nameInput.setAttribute('id', 'alert' + index + 'Name');
@@ -54,10 +54,11 @@
       alertDelete.appendChild(deleteLabel);
       var durationLabel = document.createElement('label');
       durationLabel.setAttribute('for', 'duration' + index);
-      durationLabel.appendChild(document.createTextNode("Duration of Alert in ms"));
+      durationLabel.appendChild(document.createTextNode("Duration of Alert in seconds: "));
       var duration = document.createElement('input');
       duration.setAttribute('id', 'duration' + index);
 
+      // Menu for graphics
       var select = document.createElement('select');
       select.setAttribute('id', 'select' + index);
       var selectLabel = document.createElement('label');
@@ -67,6 +68,26 @@
         v.forEach(populateList);
       });
 
+      // Menu for layouts
+      var selectLayout = document.createElement('select');
+      selectLayout.setAttribute('id', 'selectLayout' + index);
+      var selectLayoutLabel = document.createElement('label');
+      selectLayoutLabel.setAttribute('for', 'selectLayout' + index);
+      selectLayoutLabel.appendChild(document.createTextNode('Layout'));
+
+      // Layout options
+      var layoutOption = document.createElement('option');
+      layoutOption.setAttribute('value', 0);
+      var layoutOptionLabel = document.createTextNode('banner');
+      layoutOption.appendChild(layoutOptionLabel);
+      selectLayout.appendChild(layoutOption);
+      layoutOption = document.createElement('option')
+      layoutOption.setAttribute('value', 1);
+      layoutOptionLabel = document.createTextNode('side');
+      layoutOption.appendChild(layoutOptionLabel);
+      selectLayout.appendChild(layoutOption);
+
+      // Create form for alert
       form.appendChild(name);
       form.appendChild(nameInput);
       form.appendChild(document.createElement("br"));
@@ -76,40 +97,56 @@
       form.appendChild(document.createElement("br"));
       form.appendChild(selectLabel);
       form.appendChild(select);
+      form.appendChild(document.createElement("br"));
       form.appendChild(durationLabel);
       form.appendChild(duration);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(selectLayoutLabel);
+      form.appendChild(selectLayout);
+      form.appendChild(document.createElement("br"));
       form.appendChild(alertSubmit);
       form.appendChild(alertDelete);
 
       div.appendChild(form);
 
+      // Load the saved settings
       document.getElementById('alert' + index + 'Name').value = value.name;
       document.getElementById('str' + index).value = value.message;
-      document.getElementById('duration' + index).value = value.duration;
+      document.getElementById('duration' + index).value = toSeconds(value.duration);
       document.getElementById('select' + index).value = value.media;
+      document.getElementById('selectLayout' + index).value = value.layout;
       // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
         console.log("remove " + index);
         alerts.value.splice(index, 1);
         removeChange = false;
       });
-      // Submit change
+      // Save changes
       document.getElementById('submitBtn' + index).addEventListener('click', e => {
         e.preventDefault();
         console.log("Submit alert " + index)
         value.name = document.getElementById('alert' + index + 'Name').value;
         value.message = document.getElementById('str' + index).value;
-        value.duration = document.getElementById('duration' + index).value;
+        value.duration = toMS(document.getElementById('duration' + index).value);
         value.media = document.getElementById('select' + index).value;
+        value.layout = document.getElementById('selectLayout' + index).value;
         removeChange = true;
       });
-      // Populate the asset menu
+      // Populate the graphic asset menu
       function populateList(value, index, array) {
         var option = document.createElement('option');
         option.setAttribute('value', index);
         var optionLabel = document.createTextNode(value.base);
         option.appendChild(optionLabel);
         select.appendChild(option);
+      }
+
+      // Conversions
+      function toSeconds(ms) {
+        return ms / 1000;
+      }
+      function toMS(seconds) {
+        return seconds * 1000;
       }
     }
     // Create a new alert.
