@@ -92,6 +92,10 @@
       return sound.value[getSound(ind)].url;
     }
 
+    function getVolume(ind) {
+      return alerts.value[ind].volume;
+    }
+
     NodeCG.waitForReplicants(alerts, activateAlert, media, sound).then(() => {
       console.log('messages are fully declared and ready to use!');
 
@@ -180,7 +184,7 @@
 
         function playSound(ind) {
           var audio = new Audio(getSoundURL(ind));
-          audio.volume = 0.2;
+          audio.volume = getVolume(ind) / 100;
           audio.play();
         }
       });

@@ -52,6 +52,24 @@
       var duration = document.createElement('input');
       duration.setAttribute('id', 'duration' + index);
 
+      var keywordColourLabel = document.createElement('label');
+      keywordColourLabel.setAttribute('for', 'keywordColour' + index);
+      keywordColourLabel.appendChild(document.createTextNode("Keyword Colour: "));
+      var keywordColour = document.createElement('input');
+      keywordColour.setAttribute('id', 'keywordColour' + index);
+
+      var fontColourLabel = document.createElement('label');
+      fontColourLabel.setAttribute('for', 'fontColour' + index);
+      fontColourLabel.appendChild(document.createTextNode("Font Colour: "));
+      var fontColour= document.createElement('input');
+      fontColour.setAttribute('id', 'fontColour' + index);
+
+      var customCSSLabel = document.createElement('label');
+      customCSSLabel.setAttribute('for', 'customCSS' + index);
+      customCSSLabel.appendChild(document.createTextNode("Custom CSS: "));
+      var customCSS = document.createElement('textarea');
+      customCSS.setAttribute('id', 'customCSS' + index);
+
       // Menu for graphics
       var select = document.createElement('select');
       select.setAttribute('id', 'select' + index);
@@ -70,6 +88,12 @@
       sound.on('change', v => {
         v.forEach(populateSoundList);
       });
+
+      var volumeLabel = document.createElement('label');
+      volumeLabel.setAttribute('for', 'volume' + index);
+      volumeLabel.appendChild(document.createTextNode("/100"));
+      var volume = document.createElement('input');
+      volume.setAttribute('id', 'volume' + index);
 
       // Menu for layouts
       var selectLayout = document.createElement('select');
@@ -116,6 +140,17 @@
       form.appendChild(document.createElement("br"));
       form.appendChild(selectSoundLabel);
       form.appendChild(selectSound);
+      form.appendChild(volume);
+      form.appendChild(volumeLabel);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(keywordColourLabel);
+      form.appendChild(keywordColour);
+      form.appendChild(fontColourLabel);
+      form.appendChild(fontColour);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(customCSSLabel);
+      form.appendChild(document.createElement("br"));
+      form.appendChild(customCSS);
       form.appendChild(document.createElement("br"));
       form.appendChild(alertSubmit);
       form.appendChild(alertDelete);
@@ -129,6 +164,8 @@
       document.getElementById('select' + index).value = value.media;
       document.getElementById('selectLayout' + index).value = value.layout;
       document.getElementById('select-sound' + index).value = value.sound;
+      document.getElementById('volume' + index).value = value.volume;
+
       // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
         console.log("remove " + index);
@@ -144,6 +181,7 @@
         value.media = document.getElementById('select' + index).value;
         value.layout = document.getElementById('selectLayout' + index).value;
         value.sound = document.getElementById('select-sound' + index).value;
+        value.volume = document.getElementById('volume' + index).value;
       });
       // Populate the graphic asset menu
 
