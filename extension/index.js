@@ -2,7 +2,7 @@
 
 module.exports = function (nodecg) {
 	// An array of alerts and their settings
-	nodecg.Replicant('alerts', { defaultValue: [{name: 'Alert1', message: '', duration: 5000, media: 'none', layout: 'banner'}] });
+	nodecg.Replicant('alerts', { defaultValue: [{name: 'Alert1', message: '', duration: 5000, media: 'none', sound: 'none', layout: 'banner'}] });
 	// The currently active aleart, changed via the API
 	nodecg.Replicant('activeAlert', { defaultValue: 0, persistent: false });
 	// Will use an array to queue up alerts

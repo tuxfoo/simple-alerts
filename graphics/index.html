@@ -8,35 +8,35 @@
   <link rel="stylesheet" href="css/text-animations.css"/>
 </head>
 <body>
-  <div id="alert-box" class="widget-AlertBox" data-layout="banner">
-    <div id="alert-wrapper">
-      <div id="alert-image-wrap">
-      <div id="alert-image" style="background-image: none;">
-
-      </div>
-
-      <div id="alert-text-wrap">
-
-        <div id="alert-text">
-
-          <div id="alert-message">
-
-            <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'></div>
+  <div id="widget" class="widget-AlertBox" data-layout="side">
+    <div id="alert-box">
+      <div id="wrap">
+        <div id="alert-image-wrap">
+          <div id="alert-image" style="background-image: none;">
           </div>
+        </div>
+      <div id="alert-text-wrap">
+            <div id="alert-text">
+              <div id="alert-message">
+              </div>
+              <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'></div>
+            </div>
         </div>
       </div>
     </div>
-</div>
+  </div>
   <script>
     var alertMessage = document.getElementById("alert-message");
+    var alertBox = document.getElementById("widget");
 
     const activeAlert = nodecg.Replicant('activeAlert');
     const alerts = nodecg.Replicant('alerts');
     const media = nodecg.Replicant('assets:media-graphics');
+    const sound = nodecg.Replicant('assets:media-sounds');
     const isAlertPlaying = nodecg.Replicant("isAlertPlaying");
     const alertQueue = nodecg.Replicant("alertQueue");
     const activateAlert = nodecg.Replicant("activateAlert");
-    var div = document.getElementById('alert-wrapper');
+    var div = document.getElementById('widget');
 
     function sleep(ms) {
       return new Promise(
@@ -60,6 +60,14 @@
       return alerts.value[ind].media;
     }
 
+    function getSound(ind) {
+      return alerts.value[ind].sound;
+    }
+
+    function getLayout(ind) {
+      return alerts.value[ind].layout;
+    }
+
     function getMediaExt(ind) {
       return media.value[getMedia(ind)].ext;
     }
@@ -80,7 +88,11 @@
       return media.value[getMedia(ind)].url;
     }
 
-    NodeCG.waitForReplicants(alerts, activateAlert, media).then(() => {
+    function getSoundURL(ind) {
+      return sound.value[getSound(ind)].url;
+    }
+
+    NodeCG.waitForReplicants(alerts, activateAlert, media, sound).then(() => {
       console.log('messages are fully declared and ready to use!');
 
       activateAlert.on('change', value => {
@@ -90,6 +102,7 @@
           div.style.display = "block";
         }
 
+        alertBox.setAttribute('data-layout', getLayout(activeAlert.value));
         var message = getMessage(activeAlert.value);
 
         // Handle media
@@ -106,11 +119,11 @@
           document.getElementById('alert-image').appendChild(video);
           document.getElementById('webm-video').play();
         } else if (getMediaExt(activeAlert.value) === ".gif") {
-          //var image = document.createElement("img");
+          var image = document.createElement("img");
           var imageElement = document.getElementById("alert-image");
           imageElement.setAttribute("style", "background-image: " + "url(\"" + getMediaURL(activeAlert.value) + "\");");
-          //image.setAttribute("src", getMediaURL(activeAlert.value));
-          //document.getElementById('alert-image').appendChild(image);
+          image.setAttribute("src", getMediaURL(activeAlert.value));
+          document.getElementById('alert-image').appendChild(image);
         }
 
         var duration = getDuration(activeAlert.value);
@@ -145,6 +158,7 @@
           messageElement.appendChild(messageText);
           userMessage.appendChild(messageElement);
         }
+        playSound(0);
         sleep(duration).then(() => {
             //clearMessage(activateAlert.value);
             div.style.display = "none";
@@ -162,6 +176,12 @@
           while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
           }
+        }
+
+        function playSound(ind) {
+          var audio = new Audio(getSoundURL(ind));
+          audio.volume = 0.2;
+          audio.play();
         }
       });
     });

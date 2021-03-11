@@ -12,16 +12,10 @@
 	<script>
     const alerts = nodecg.Replicant('alerts');
     const art = nodecg.Replicant('assets:media-graphics');
-    // If the change is removal, do not run showPanels
-    var removeChange = false;
-    // Iterate thru each user created alert and generate a menu.
-    alerts.on('change', value => {
-      console.log("changed");
-      if (removeChange == false) {
-        value.forEach(showPanels);
-      } else {
-        removeChange = false;
-      }
+    const sound = nodecg.Replicant('assets:media-sounds');
+
+    NodeCG.waitForReplicants(alerts, art, sound).then(() => {
+      alerts.value.forEach(showPanels);
     });
 
     function showPanels(value, index, array) {
@@ -63,9 +57,18 @@
       select.setAttribute('id', 'select' + index);
       var selectLabel = document.createElement('label');
       selectLabel.setAttribute('for', 'select' + index);
-      selectLabel.appendChild(document.createTextNode("Media"));
+      selectLabel.appendChild(document.createTextNode("Media: "));
       art.on('change', v => {
         v.forEach(populateList);
+      });
+
+      var selectSound = document.createElement('select');
+      selectSound.setAttribute('id', 'select-sound' + index);
+      var selectSoundLabel = document.createElement('label');
+      selectSoundLabel.setAttribute('for', 'select-sound' + index);
+      selectSoundLabel.appendChild(document.createTextNode("Sound: "));
+      sound.on('change', v => {
+        v.forEach(populateSoundList);
       });
 
       // Menu for layouts
@@ -73,17 +76,24 @@
       selectLayout.setAttribute('id', 'selectLayout' + index);
       var selectLayoutLabel = document.createElement('label');
       selectLayoutLabel.setAttribute('for', 'selectLayout' + index);
-      selectLayoutLabel.appendChild(document.createTextNode('Layout'));
+      selectLayoutLabel.appendChild(document.createTextNode('Layout: '));
 
       // Layout options
       var layoutOption = document.createElement('option');
-      layoutOption.setAttribute('value', 0);
+      layoutOption.setAttribute('value', 'banner');
       var layoutOptionLabel = document.createTextNode('banner');
       layoutOption.appendChild(layoutOptionLabel);
       selectLayout.appendChild(layoutOption);
+
       layoutOption = document.createElement('option')
-      layoutOption.setAttribute('value', 1);
+      layoutOption.setAttribute('value', 'side');
       layoutOptionLabel = document.createTextNode('side');
+      layoutOption.appendChild(layoutOptionLabel);
+      selectLayout.appendChild(layoutOption);
+
+      layoutOption = document.createElement('option')
+      layoutOption.setAttribute('value', 'above');
+      layoutOptionLabel = document.createTextNode('above');
       layoutOption.appendChild(layoutOptionLabel);
       selectLayout.appendChild(layoutOption);
 
@@ -104,6 +114,9 @@
       form.appendChild(selectLayoutLabel);
       form.appendChild(selectLayout);
       form.appendChild(document.createElement("br"));
+      form.appendChild(selectSoundLabel);
+      form.appendChild(selectSound);
+      form.appendChild(document.createElement("br"));
       form.appendChild(alertSubmit);
       form.appendChild(alertDelete);
 
@@ -115,11 +128,11 @@
       document.getElementById('duration' + index).value = toSeconds(value.duration);
       document.getElementById('select' + index).value = value.media;
       document.getElementById('selectLayout' + index).value = value.layout;
+      document.getElementById('select-sound' + index).value = value.sound;
       // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
         console.log("remove " + index);
         alerts.value.splice(index, 1);
-        removeChange = false;
       });
       // Save changes
       document.getElementById('submitBtn' + index).addEventListener('click', e => {
@@ -130,15 +143,25 @@
         value.duration = toMS(document.getElementById('duration' + index).value);
         value.media = document.getElementById('select' + index).value;
         value.layout = document.getElementById('selectLayout' + index).value;
-        removeChange = true;
+        value.sound = document.getElementById('select-sound' + index).value;
       });
       // Populate the graphic asset menu
+
       function populateList(value, index, array) {
         var option = document.createElement('option');
         option.setAttribute('value', index);
         var optionLabel = document.createTextNode(value.base);
         option.appendChild(optionLabel);
         select.appendChild(option);
+      }
+      // I should combine this with graphic menu and make it work for all select menu's.
+      // Populate the sound asset menu
+      function populateSoundList(value, index, array) {
+        var option = document.createElement('option');
+        option.setAttribute('value', index);
+        var optionLabel = document.createTextNode(value.base);
+        option.appendChild(optionLabel);
+        selectSound.appendChild(option);
       }
 
       // Conversions

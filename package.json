@@ -40,6 +40,15 @@
           "png",
           "webm"
         ]
+      },
+      {
+        "name": "media-sounds",
+        "title": "Sounds",
+        "allowedTypes": [
+          "mp3",
+          "wav",
+          "ogg"
+        ]
       }
     ]
   }
