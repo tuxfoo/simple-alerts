@@ -77,6 +77,10 @@
       return alerts.value[ind].fontColour;
     }
 
+    function getCSS(ind) {
+      return alerts.value[ind].customCSS;
+    }
+
     function getMediaExt(ind) {
       if ( getMedia(ind) != 'none' ) {
         return media.value[getMedia(ind)].ext;
@@ -119,6 +123,10 @@
           if (div.style.display === "none") {
             div.style.display = "block";
           }
+
+          var css = document.getElementById('customCSS');
+          userCSS = document.createTextNode(getCSS(activeAlert.value));
+          css.appendChild(userCSS);
 
           alertBox.setAttribute('data-layout', getLayout(activeAlert.value));
           var message = getMessage(activeAlert.value);
@@ -190,6 +198,7 @@
               graphic.setAttribute("style", "background-image: none;");
               removeAllChildren(msg);
               removeAllChildren(graphic);
+              css.textContent = '';
               console.log("HIDE");
               isAlertPlaying.value = false;
               //Remove from Queue
@@ -213,5 +222,7 @@
       });
     });
   </script>
+  <style id='customCSS'>
+  </style>
 </body>
 </html>

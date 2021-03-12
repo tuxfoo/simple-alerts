@@ -181,6 +181,7 @@
       document.getElementById('volume' + index).value = value.volume;
       document.getElementById('keywordColour' + index).value = value.keywordColour;
       document.getElementById('fontColour' + index).value = value.fontColour;
+      document.getElementById('customCSS' + index).value = value.customCSS;
 
       // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
@@ -200,6 +201,7 @@
         value.volume = document.getElementById('volume' + index).value;
         value.keywordColour = document.getElementById('keywordColour' + index).value;
         value.fontColour = document.getElementById('fontColour' + index).value;
+        value.customCSS = document.getElementById('customCSS' + index).value;
       });
       // Populate the graphic asset menu
 
@@ -230,7 +232,7 @@
     }
     // Create a new alert.
     document.getElementById('newAlert').addEventListener('click', e => {
-      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000, sound: 'none', media: 'none', keywordColour: '#4FE639', fontColour: '#FFFFFF'});
+      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000, sound: 'none', media: 'none', keywordColour: '#4FE639', fontColour: '#FFFFFF', layout: 'banner', volume: 80, customCSS: ''});
     });
 	</script>
 </body>

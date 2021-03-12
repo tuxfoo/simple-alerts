@@ -8,13 +8,11 @@ The alerts will be triggered/activated by other software/scripts using a rest AP
 
 ## known issues/To do
 
-* Finish creating the API. (Partially implemented for testing)
 * Add a "test" to the dashboard panel.
-* Allow custom CSS (The menu for this is just a placeholder)
 * Add show/hide button for each alert on dashboard to make it more tidy.
 * Add customisable fonts and sizes.
 * Make alerts fade in and out
-* Add form validation, incorrect values can make the alert get stuck in a loop.
+* Add form validation, incorrect values can make the alert get stuck in a loop or not work at all.
 * Create a simple tip/donation ticker (this might be better as a separate bundle).
 
 ## How to send an alert using cURL
