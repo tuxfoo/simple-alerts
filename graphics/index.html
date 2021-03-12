@@ -19,7 +19,7 @@
             <div id="alert-text">
               <div id="alert-message">
               </div>
-              <div id="alert-user-message" class="animate__animated animate__tada" style='font-size: 64px; color: rgb(255, 255, 255); font-family: "Palanquin"; font-weight: 800;'></div>
+              <div id="alert-user-message" class="animate__animated animate__tada" ></div>
             </div>
         </div>
       </div>
@@ -46,7 +46,8 @@
 
     function animateText(word) {
       var span = document.createElement("span");
-      span.setAttribute("style", "color: rgb(79, 230, 57); position: relative;");
+      console.log("Colour: " + getKeywordColour(activeAlert.value));
+      span.setAttribute("style", "color: " + getKeywordColour(activeAlert.value) + " ; position: relative;");
       for (var i = 0; i < word.length; i++) {
         var letter = document.createElement("span");
         letter.setAttribute("class", "animated-letter rubberBand");
@@ -68,8 +69,20 @@
       return alerts.value[ind].layout;
     }
 
+    function getKeywordColour(ind) {
+      return alerts.value[ind].keywordColour;
+    }
+
+    function getColour(ind) {
+      return alerts.value[ind].fontColour;
+    }
+
     function getMediaExt(ind) {
-      return media.value[getMedia(ind)].ext;
+      if ( getMedia(ind) != 'none' ) {
+        return media.value[getMedia(ind)].ext;
+      } else {
+        return 'none'
+      }
     }
 
     function getDuration(ind) {
@@ -96,96 +109,106 @@
       return alerts.value[ind].volume;
     }
 
-    NodeCG.waitForReplicants(alerts, activateAlert, media, sound).then(() => {
+    NodeCG.waitForReplicants(alerts, activateAlert, media, sound, alertQueue).then(() => {
       console.log('messages are fully declared and ready to use!');
 
       activateAlert.on('change', value => {
-        isAlertPlaying.value = true;
-        // Should add a isAlertPlaying function to queue alerts.
-        if (div.style.display === "none") {
-          div.style.display = "block";
-        }
+        if ( alertQueue.value.length > 0 ) {
+          isAlertPlaying.value = true;
+          // Should add a isAlertPlaying function to queue alerts.
+          if (div.style.display === "none") {
+            div.style.display = "block";
+          }
 
-        alertBox.setAttribute('data-layout', getLayout(activeAlert.value));
-        var message = getMessage(activeAlert.value);
+          alertBox.setAttribute('data-layout', getLayout(activeAlert.value));
+          var message = getMessage(activeAlert.value);
 
-        // Handle media
-        console.log(getMediaExt(activeAlert.value));
-        if (getMediaExt(activeAlert.value) === ".webm") {
-          console.log("Alert has media:");
-          console.log("isVideo");
-          var video = document.createElement("video");
-          video.setAttribute("id", "webm-video");
-          video.setAttribute("autoplay", "autoplay");
-          video.setAttribute("muted", "muted");
-          video.setAttribute("loop", "loop");
-          video.setAttribute("src", getMediaURL(activeAlert.value));
-          document.getElementById('alert-image').appendChild(video);
-          document.getElementById('webm-video').play();
-        } else if (getMediaExt(activeAlert.value) === ".gif") {
-          var image = document.createElement("img");
-          var imageElement = document.getElementById("alert-image");
-          imageElement.setAttribute("style", "background-image: " + "url(\"" + getMediaURL(activeAlert.value) + "\");");
-          image.setAttribute("src", getMediaURL(activeAlert.value));
-          document.getElementById('alert-image').appendChild(image);
-        }
+          // Handle media
+          console.log(getMediaExt(activeAlert.value));
+          if (getMediaExt(activeAlert.value) === ".webm") {
+            console.log("Alert has media:");
+            console.log("isVideo");
+            var video = document.createElement("video");
+            video.setAttribute("id", "webm-video");
+            video.setAttribute("autoplay", "autoplay");
+            video.setAttribute("muted", "muted");
+            video.setAttribute("loop", "loop");
+            video.setAttribute("src", getMediaURL(activeAlert.value));
+            document.getElementById('alert-image').appendChild(video);
+            document.getElementById('webm-video').play();
+          } else if (getMediaExt(activeAlert.value) === ".gif") {
+            var image = document.createElement("img");
+            var imageElement = document.getElementById("alert-image");
+            imageElement.setAttribute("style", "background-image: " + "url(\"" + getMediaURL(activeAlert.value) + "\");");
+            image.setAttribute("src", getMediaURL(activeAlert.value));
+            document.getElementById('alert-image').appendChild(image);
+          }
 
-        var duration = getDuration(activeAlert.value);
-        var re = /\(.*?\)/g;
-        var keywords = message.matchAll(re);
-        var userMessage = document.getElementById('alert-user-message');
-        var lastKeyword = 0;
-        var count = 0;
-        for ( var keyword of keywords ) {
-          // Check to see if a keyword is first in message.
-          if ( keyword.index != 0 ) {
-            var messageElement = document.createElement("span");
-            if (count != 0) {
-              var messageText = document.createTextNode(message.slice(lastKeyword + 2, keyword.index));
-            } else {
-              var messageText = document.createTextNode(message.slice(lastKeyword, keyword.index));
+          var duration = getDuration(activeAlert.value);
+          var re = /\(.*?\)/g;
+          var keywords = message.matchAll(re);
+          var userMessage = document.getElementById('alert-user-message');
+          userMessage.setAttribute('style', 'color: ' + getColour(activeAlert.value) + '; font-size: 64px; font-family: "Palanquin"; font-weight: 800;');
+          var lastKeyword = 0;
+          var count = 0;
+          for ( var keyword of keywords ) {
+            // Check to see if a keyword is first in message.
+            if ( keyword.index != 0 ) {
+              var messageElement = document.createElement("span");
+              if (count != 0) {
+                var messageText = document.createTextNode(message.slice(lastKeyword + 2, keyword.index));
+              } else {
+                var messageText = document.createTextNode(message.slice(lastKeyword, keyword.index));
+              }
+              messageElement.appendChild(messageText);
+              userMessage.appendChild(messageElement);
             }
+            console.log(message);
+            keyword[0] = keyword[0].replace("(", "");
+            keyword[0] = keyword[0].replace(")", "");
+            userMessage.appendChild(animateText(keyword[0]));
+            lastKeyword = keyword.index + keyword[0].length;
+            count = count + 1;
+          }
+          // If a keyword is not last, add the rest of the message.
+          if ( lastKeyword < getMessage(activeAlert.value).length ) {
+            messageElement = document.createElement("span");
+            messageText = document.createTextNode(getMessage(activeAlert.value).slice(lastKeyword + 2, message.length));
             messageElement.appendChild(messageText);
             userMessage.appendChild(messageElement);
           }
-          console.log(message);
-          keyword[0] = keyword[0].replace("(", "");
-          keyword[0] = keyword[0].replace(")", "");
-          userMessage.appendChild(animateText(keyword[0]));
-          lastKeyword = keyword.index + keyword[0].length;
-          count = count + 1;
-        }
-        // If a keyword is not last, add the rest of the message.
-        if ( lastKeyword < getMessage(activeAlert.value).length ) {
-          messageElement = document.createElement("span");
-          messageText = document.createTextNode(getMessage(activeAlert.value).slice(lastKeyword + 2, message.length));
-          messageElement.appendChild(messageText);
-          userMessage.appendChild(messageElement);
-        }
-        playSound(0);
-        sleep(duration).then(() => {
-            //clearMessage(activateAlert.value);
-            div.style.display = "none";
-            if (media.value[getMedia(activeAlert.value)].ext === ".webm") {
-              var video2 = document.getElementById('webm-video');
-              video2.parentNode.removeChild(video);
+          playSound(activeAlert.value);
+          sleep(duration).then(() => {
+              //clearMessage(activateAlert.value);
+              div.style.display = "none";
+              if (media.value[getMedia(activeAlert.value)].ext === ".webm") {
+                var video2 = document.getElementById('webm-video');
+                video2.parentNode.removeChild(video);
+              }
+              var msg = document.getElementById('alert-user-message');
+              var graphic = document.getElementById('alert-image');
+              graphic.setAttribute("style", "background-image: none;");
+              removeAllChildren(msg);
+              removeAllChildren(graphic);
+              console.log("HIDE");
+              isAlertPlaying.value = false;
+              //Remove from Queue
+              alertQueue.value.splice(0, 1);
+          });
+
+          function removeAllChildren(parent) {
+            while (parent.firstChild) {
+              parent.removeChild(parent.firstChild);
             }
-            var msg = document.getElementById('alert-user-message');
-            removeAllChildren(msg);
-            console.log("HIDE");
-            isAlertPlaying.value = false;
-        });
-
-        function removeAllChildren(parent) {
-          while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
           }
-        }
 
-        function playSound(ind) {
-          var audio = new Audio(getSoundURL(ind));
-          audio.volume = getVolume(ind) / 100;
-          audio.play();
+          function playSound(ind) {
+            if (alerts.value[ind].sound != 'none') {
+              var audio = new Audio(getSoundURL(ind));
+              audio.volume = getVolume(ind) / 100;
+              audio.play();
+            }
+          }
         }
       });
     });

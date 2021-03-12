@@ -9,18 +9,17 @@ The alerts will be triggered/activated by other software/scripts using a rest AP
 ## known issues/To do
 
 * Finish creating the API. (Partially implemented for testing)
-* Add "none" option to graphics and sounds
-* Add a queue for the alerts.
 * Add a "test" to the dashboard panel.
-* Add a few different layouts
-    * Media left, message center
-    * media left, message center top
-    * media left, message top left
-    * media fullscreen, message center (This is currently the default)
 * Allow custom CSS (The menu for this is just a placeholder)
 * Add show/hide button for each alert on dashboard to make it more tidy.
-* Customisable fonts and colours (The menu for this is just a placeholder).
-* Stop alert from playing when page loads.
+* Add customisable fonts and sizes.
 * Make alerts fade in and out
-* Create a simple tip/donation ticker (this might be better as a separate bundle).
 * Add form validation, incorrect values can make the alert get stuck in a loop.
+* Create a simple tip/donation ticker (this might be better as a separate bundle).
+
+## How to send an alert using cURL
+
+Make sure to provide an alert name, place keywords in brackets. Keywords will be animated and are a different colour.
+```
+curl -X POST -H "Content-Type:application/json" http://localhost:9090/simple-alerts/alert -d '{"name":"alertname", "message":"(Billy) tipped (20) LBC"}'
+```
