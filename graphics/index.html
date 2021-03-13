@@ -6,6 +6,13 @@
   <link rel="stylesheet" href="css/tip.css"/>
   <link rel="stylesheet" href="css/animate.css"/>
   <link rel="stylesheet" href="css/text-animations.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Aclonica' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Aladin' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Amita' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Balsamiq Sans' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Bebas Neue' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Fontdiner Swanky' rel='stylesheet'>
 </head>
 <body>
   <div id="widget" class="widget-AlertBox" data-layout="side">
@@ -75,6 +82,10 @@
 
     function getColour(ind) {
       return alerts.value[ind].fontColour;
+    }
+
+    function getFont(ind) {
+      return alerts.value[ind].font;
     }
 
     function getCSS(ind) {
@@ -156,7 +167,7 @@
           var re = /\(.*?\)/g;
           var keywords = message.matchAll(re);
           var userMessage = document.getElementById('alert-user-message');
-          userMessage.setAttribute('style', 'color: ' + getColour(activeAlert.value) + '; font-size: 64px; font-family: "Palanquin"; font-weight: 800;');
+          userMessage.setAttribute('style', 'color: ' + getColour(activeAlert.value) + '; font-size: 64px; font-family: ' + getFont(activeAlert.value) +' ; font-weight: 800;');
           var lastKeyword = 0;
           var count = 0;
           for ( var keyword of keywords ) {

@@ -19,6 +19,9 @@
     });
 
     function showPanels(value, index, array) {
+
+      var fonts = ["Arial, sans-serif", "'Times New Roman', serif", "'Courier New', monospace", "'Brush Script MT', cursive", "Palanquin", "'Aclonica'" , "'Aladin'", "'Amita'", "''Audiowide'", "'Balsamiq Sans'", "'Bebas Neue'", "'Fontdiner Swanky'"]
+
       var alreadyExists = document.getElementById('alert' + index)
       const div = document.getElementById('alerts-wrap');
       console.log("creating " + index);
@@ -63,6 +66,13 @@
       fontColourLabel.appendChild(document.createTextNode("Font Colour: "));
       var fontColour= document.createElement('input');
       fontColour.setAttribute('id', 'fontColour' + index);
+
+      var fontLabel = document.createElement('label');
+      fontLabel.setAttribute('for', 'font');
+      fontLabel.appendChild(document.createTextNode("Font: "));
+      var font = document.createElement('select');
+      font.setAttribute('id', 'font' + index);
+      fonts.forEach(populateFontList);
 
       var customCSSLabel = document.createElement('label');
       customCSSLabel.setAttribute('for', 'customCSS' + index);
@@ -162,6 +172,9 @@
       form.appendChild(fontColourLabel);
       form.appendChild(fontColour);
       form.appendChild(document.createElement("br"));
+      form.appendChild(fontLabel);
+      form.appendChild(font);
+      form.appendChild(document.createElement("br"));
       form.appendChild(customCSSLabel);
       form.appendChild(document.createElement("br"));
       form.appendChild(customCSS);
@@ -182,6 +195,7 @@
       document.getElementById('keywordColour' + index).value = value.keywordColour;
       document.getElementById('fontColour' + index).value = value.fontColour;
       document.getElementById('customCSS' + index).value = value.customCSS;
+      document.getElementById('font' + index).value = value.font;
 
       // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
@@ -202,6 +216,7 @@
         value.keywordColour = document.getElementById('keywordColour' + index).value;
         value.fontColour = document.getElementById('fontColour' + index).value;
         value.customCSS = document.getElementById('customCSS' + index).value;
+        value.font = document.getElementById('font' + index).value;
       });
       // Populate the graphic asset menu
 
@@ -222,6 +237,15 @@
         selectSound.appendChild(option);
       }
 
+      // Populate the font menu
+      function populateFontList(value, index, array) {
+        var option = document.createElement('option');
+        option.setAttribute('value', value);
+        var optionLabel = document.createTextNode(value);
+        option.appendChild(optionLabel);
+        font.appendChild(option);
+      }
+
       // Conversions
       function toSeconds(ms) {
         return ms / 1000;
@@ -232,7 +256,7 @@
     }
     // Create a new alert.
     document.getElementById('newAlert').addEventListener('click', e => {
-      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000, sound: 'none', media: 'none', keywordColour: '#4FE639', fontColour: '#FFFFFF', layout: 'banner', volume: 80, customCSS: ''});
+      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000, sound: 'none', media: 'none', keywordColour: '#4FE639', fontColour: '#FFFFFF', layout: 'banner', volume: 80, customCSS: '', font: '"Palanquin"'});
     });
 	</script>
 </body>
