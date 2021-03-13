@@ -11,7 +11,6 @@ The alerts will be triggered/activated by other software/scripts using a rest AP
 ## known issues/To do
 
 * Add a "test" to the dashboard panel.
-* Add show/hide button for each alert on dashboard to make it more tidy.
 * Make alerts fade in and out (Maybe some other animations too)
 * Add form validation, incorrect values can make the alert get stuck in a loop or not work at all.
 * Create a simple tip/donation ticker (this might be better as a separate bundle).

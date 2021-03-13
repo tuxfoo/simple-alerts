@@ -22,6 +22,15 @@
 
       var fonts = ["Arial, sans-serif", "'Times New Roman', serif", "'Courier New', monospace", "'Brush Script MT', cursive", "Palanquin", "'Aclonica'" , "'Aladin'", "'Amita'", "''Audiowide'", "'Balsamiq Sans'", "'Bebas Neue'", "'Fontdiner Swanky'"]
 
+      var alertHide = document.createElement('button');
+      alertHide.setAttribute('id', 'alertHide' + index);
+      var alertHideLabel = document.createTextNode("Show/Hide Alert " + index);
+      alertHide.appendChild(alertHideLabel);
+
+      var alertWrap = document.createElement('div');
+      alertWrap.setAttribute('style', 'display: none');
+      alertWrap.setAttribute('id', 'alertWrap' + index);
+
       var alreadyExists = document.getElementById('alert' + index)
       const div = document.getElementById('alerts-wrap');
       console.log("creating " + index);
@@ -205,7 +214,9 @@
       form.appendChild(alertSubmit);
       form.appendChild(alertDelete);
 
-      div.appendChild(form);
+      alertWrap.appendChild(form);
+      div.appendChild(alertHide);
+      div.appendChild(alertWrap);
 
       // Load the saved settings
       document.getElementById('alert' + index + 'Name').value = value.name;
@@ -226,6 +237,15 @@
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
         console.log("remove " + index);
         alerts.value.splice(index, 1);
+      });
+      // show/hide alert
+      document.getElementById('alertHide' + index).addEventListener('click', e => {
+        var showHide = document.getElementById('alertWrap' + index);
+        if (showHide.style.display == 'none') {
+          showHide.setAttribute('style', 'display: block');
+        } else {
+          showHide.setAttribute('style', 'display: none');
+        }
       });
       // Save changes
       document.getElementById('submitBtn' + index).addEventListener('click', e => {
