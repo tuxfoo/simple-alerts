@@ -208,7 +208,7 @@
           sleep(duration).then(() => {
               //clearMessage(activateAlert.value);
               div.style.display = "none";
-              if (media.value[getMedia(activeAlert.value)].ext === ".webm") {
+              if (getMediaExt(activeAlert.value) === ".webm") {
                 var video2 = document.getElementById('webm-video');
                 video2.parentNode.removeChild(video);
               }
