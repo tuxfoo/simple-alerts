@@ -88,6 +88,14 @@
       return alerts.value[ind].font;
     }
 
+    function getFontSize(ind) {
+      return alerts.value[ind].fontSize;
+    }
+
+    function getFontWeight(ind) {
+      return alerts.value[ind].fontWeight;
+    }
+
     function getCSS(ind) {
       return alerts.value[ind].customCSS;
     }
@@ -167,7 +175,7 @@
           var re = /\(.*?\)/g;
           var keywords = message.matchAll(re);
           var userMessage = document.getElementById('alert-user-message');
-          userMessage.setAttribute('style', 'color: ' + getColour(activeAlert.value) + '; font-size: 64px; font-family: ' + getFont(activeAlert.value) +' ; font-weight: 800;');
+          userMessage.setAttribute('style', 'color: ' + getColour(activeAlert.value) + '; font-size: ' + getFontSize(activeAlert.value) + 'px; font-family: ' + getFont(activeAlert.value) + ' ; font-weight: ' + getFontWeight(activeAlert.value) + ';');
           var lastKeyword = 0;
           var count = 0;
           for ( var keyword of keywords ) {

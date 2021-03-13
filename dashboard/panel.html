@@ -53,6 +53,7 @@
       durationLabel.setAttribute('for', 'duration' + index);
       durationLabel.appendChild(document.createTextNode("Duration of Alert in seconds: "));
       var duration = document.createElement('input');
+      duration.setAttribute('size', '4');
       duration.setAttribute('id', 'duration' + index);
 
       var keywordColourLabel = document.createElement('label');
@@ -60,12 +61,14 @@
       keywordColourLabel.appendChild(document.createTextNode("Keyword Colour: "));
       var keywordColour = document.createElement('input');
       keywordColour.setAttribute('id', 'keywordColour' + index);
+      keywordColour.setAttribute('size', '7');
 
       var fontColourLabel = document.createElement('label');
       fontColourLabel.setAttribute('for', 'fontColour' + index);
       fontColourLabel.appendChild(document.createTextNode("Font Colour: "));
       var fontColour= document.createElement('input');
       fontColour.setAttribute('id', 'fontColour' + index);
+      fontColour.setAttribute('size', '7');
 
       var fontLabel = document.createElement('label');
       fontLabel.setAttribute('for', 'font');
@@ -73,6 +76,20 @@
       var font = document.createElement('select');
       font.setAttribute('id', 'font' + index);
       fonts.forEach(populateFontList);
+
+      var fontSizeLabel = document.createElement('label');
+      fontSizeLabel.setAttribute('for', 'fontSize');
+      fontSizeLabel.appendChild(document.createTextNode("Font Size: "));
+      var fontSize = document.createElement('input');
+      fontSize.setAttribute('size', '4');
+      fontSize.setAttribute('id', 'fontSize' + index);
+
+      var fontWeightLabel = document.createElement('label');
+      fontWeightLabel.setAttribute('for', 'fontWeight');
+      fontWeightLabel.appendChild(document.createTextNode("Font Weight: "));
+      var fontWeight = document.createElement('input');
+      fontWeight.setAttribute('size', '4');
+      fontWeight.setAttribute('id', 'fontWeight' + index);
 
       var customCSSLabel = document.createElement('label');
       customCSSLabel.setAttribute('for', 'customCSS' + index);
@@ -115,8 +132,9 @@
 
       var volumeLabel = document.createElement('label');
       volumeLabel.setAttribute('for', 'volume' + index);
-      volumeLabel.appendChild(document.createTextNode("/100"));
+      volumeLabel.appendChild(document.createTextNode("/100 (Volume)"));
       var volume = document.createElement('input');
+      volume.setAttribute('size', '4');
       volume.setAttribute('id', 'volume' + index);
 
       // Menu for layouts
@@ -175,6 +193,11 @@
       form.appendChild(fontLabel);
       form.appendChild(font);
       form.appendChild(document.createElement("br"));
+      form.appendChild(fontSizeLabel);
+      form.appendChild(fontSize);
+      form.appendChild(fontWeightLabel);
+      form.appendChild(fontWeight);
+      form.appendChild(document.createElement("br"));
       form.appendChild(customCSSLabel);
       form.appendChild(document.createElement("br"));
       form.appendChild(customCSS);
@@ -196,6 +219,8 @@
       document.getElementById('fontColour' + index).value = value.fontColour;
       document.getElementById('customCSS' + index).value = value.customCSS;
       document.getElementById('font' + index).value = value.font;
+      document.getElementById('fontSize' + index).value = value.fontSize;
+      document.getElementById('fontWeight' + index).value = value.fontWeight;
 
       // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
@@ -217,6 +242,8 @@
         value.fontColour = document.getElementById('fontColour' + index).value;
         value.customCSS = document.getElementById('customCSS' + index).value;
         value.font = document.getElementById('font' + index).value;
+        value.fontSize = document.getElementById('fontSize' + index).value;
+        value.fontWeight = document.getElementById('fontWeight' + index).value;
       });
       // Populate the graphic asset menu
 
@@ -256,7 +283,7 @@
     }
     // Create a new alert.
     document.getElementById('newAlert').addEventListener('click', e => {
-      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000, sound: 'none', media: 'none', keywordColour: '#4FE639', fontColour: '#FFFFFF', layout: 'banner', volume: 80, customCSS: '', font: '"Palanquin"'});
+      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000, sound: 'none', media: 'none', keywordColour: '#4FE639', fontColour: '#FFFFFF', layout: 'banner', volume: 80, customCSS: '', font: 'Palanquin', fontWeight: '800', fontSize: '64'});
     });
 	</script>
 </body>
