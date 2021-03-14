@@ -163,7 +163,7 @@
             video.setAttribute("src", getMediaURL(activeAlert.value));
             document.getElementById('alert-image').appendChild(video);
             document.getElementById('webm-video').play();
-          } else if (getMediaExt(activeAlert.value) === ".gif") {
+          } else if (getMediaExt(activeAlert.value) === ".gif" || getMediaExt(activeAlert.value) === ".png" || getMediaExt(activeAlert.value) === ".jpg") {
             var image = document.createElement("img");
             var imageElement = document.getElementById("alert-image");
             imageElement.setAttribute("style", "background-image: " + "url(\"" + getMediaURL(activeAlert.value) + "\");");
