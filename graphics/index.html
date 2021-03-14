@@ -51,6 +51,12 @@
       );
     }
 
+    function delay(ms) {
+      return new Promise(
+        resolve => setTimeout(resolve, ms)
+      );
+    }
+
     function animateText(word) {
       var span = document.createElement("span");
       console.log("Colour: " + getKeywordColour(activeAlert.value));
@@ -160,6 +166,7 @@
             video.setAttribute("autoplay", "autoplay");
             video.setAttribute("muted", "muted");
             video.setAttribute("loop", "loop");
+            video.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
             video.setAttribute("src", getMediaURL(activeAlert.value));
             document.getElementById('alert-image').appendChild(video);
             document.getElementById('webm-video').play();
@@ -167,6 +174,7 @@
             var image = document.createElement("img");
             var imageElement = document.getElementById("alert-image");
             imageElement.setAttribute("style", "background-image: " + "url(\"" + getMediaURL(activeAlert.value) + "\");");
+            image.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
             image.setAttribute("src", getMediaURL(activeAlert.value));
             document.getElementById('alert-image').appendChild(image);
           }
@@ -176,6 +184,7 @@
           var keywords = message.matchAll(re);
           var userMessage = document.getElementById('alert-user-message');
           userMessage.setAttribute('style', 'color: ' + getColour(activeAlert.value) + '; font-size: ' + getFontSize(activeAlert.value) + 'px; font-family: ' + getFont(activeAlert.value) + ' ; font-weight: ' + getFontWeight(activeAlert.value) + ';');
+          userMessage.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
           var lastKeyword = 0;
           var count = 0;
           for ( var keyword of keywords ) {
@@ -205,6 +214,12 @@
             userMessage.appendChild(messageElement);
           }
           playSound(activeAlert.value);
+          delay(duration - 2).then(() => {
+              //Fade alert out (This is not working)
+              userMessage.setAttribute("class", "animate__animated animate__bounceOut animate__slow");
+              image.setAttribute("class", "animate__animated animate__bounceOut animate__slow");
+              video.setAttribute("class", "animate__animated animate__bounceOut animate__slow");
+          });
           sleep(duration).then(() => {
               //clearMessage(activateAlert.value);
               div.style.display = "none";
