@@ -21,3 +21,14 @@ Make sure to provide an alert name, place keywords in brackets. Keywords will be
 ```
 curl -X POST -H "Content-Type:application/json" http://localhost:9090/simple-alerts/alert -d '{"name":"alertname", "message":"(Billy) tipped (20) LBC"}'
 ```
+
+## Preview
+
+* You can add as many alert's as you want
+* The alert text is animated.
+* You can change the layout, duration, colours and fonts.
+* Upload your own sounds and animated graphics in the Assets tab.
+* The Custom CSS is compatible with streamlabs customCSS.
+
+![alt text](https://github.com/tuxfoo/simple-alerts/blob/main/preview.jpg?raw=true)
+![alt text](https://github.com/tuxfoo/simple-alerts/blob/main/preview2.jpg?raw=true)
