@@ -23,6 +23,12 @@ Make sure to provide an alert name, place keywords in brackets. Keywords will be
 curl -X POST -H "Content-Type:application/json" http://localhost:9090/simple-alerts/alert -d '{"name":"alertname", "message":"(Billy) tipped (20) LBC"}'
 ```
 
+## How to send an alert using invoke-webrequest (WINDOWS PowerShell)
+Make sure to provide an alert name, place keywords in brackets. Keywords will be animated and are a different colour.
+```
+invoke-webrequest -Uri http://localhost:9090/simple-alerts/alert -Method POST -Headers @{'Content-Type' = 'application/json; charset=utf-8'} -Body '{"name":"alertname", "message":"(Billy) tipped (20) LBC"}' -UseBasicParsing
+```
+
 ## Preview
 
 * You can add as many alert's as you want
