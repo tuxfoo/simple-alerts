@@ -216,9 +216,12 @@
           playSound(activeAlert.value);
           delay(duration - 2).then(() => {
               //Fade alert out (This is not working)
-              userMessage.setAttribute("class", "animate__animated animate__bounceOut animate__slow");
-              image.setAttribute("class", "animate__animated animate__bounceOut animate__slow");
-              video.setAttribute("class", "animate__animated animate__bounceOut animate__slow");
+              userMessage.removeAttribute("class");
+              userMessage.setAttribute ("class", "animate__animated animate__bounceOut");
+              image.removeAttribute("class");
+              image.setAttribute ("class", "animate__animated animate__bounceOut");
+              video.removeAttribute("class");
+              video.setAttribute ("class", "animate__animated animate__bounceOut");
           });
           sleep(duration).then(() => {
               //clearMessage(activateAlert.value);
