@@ -116,27 +116,30 @@
       var selectLabel = document.createElement('label');
       selectLabel.setAttribute('for', 'select' + index);
       selectLabel.appendChild(document.createTextNode("Media: "));
-      select.appendChild(noneOption);
+      select.appendChild(noneOption.cloneNode(true));
       art.on('change', v => {
+        removeAllChildren(select);
+        select.appendChild(noneOption.cloneNode(true));
         v.forEach(populateList);
+        if ( document.body.contains(select)) {
+          document.getElementById('select' + index).value = value.media;
+        }
       });
 
-      // None Option for drop down menu's
-      var noneOption = document.createElement('option');
-      noneOption.setAttribute('value', 'none');
-      var noneLabel = document.createTextNode('None');
-      noneOption.appendChild(noneLabel);
-
+      // Menu for sounds
       var selectSound = document.createElement('select');
       selectSound.setAttribute('id', 'select-sound' + index);
       var selectSoundLabel = document.createElement('label');
       selectSoundLabel.setAttribute('for', 'select-sound' + index);
       selectSoundLabel.appendChild(document.createTextNode("Sound: "));
-      selectSound.appendChild(noneOption);
-      sound.value.forEach(populateSoundList);
+      selectSound.appendChild(noneOption.cloneNode(true));
       sound.on('change', v => {
-        removeAllChildren('select-sound' + index);
-        //populateSoundList(sound)
+        removeAllChildren(selectSound);
+        selectSound.appendChild(noneOption.cloneNode(true));
+        v.forEach(populateSoundList)
+        if ( document.body.contains(selectSound)) {
+          document.getElementById('select-sound' + index).value = value.sound;
+        }
       });
 
       var volumeLabel = document.createElement('label');
@@ -271,11 +274,13 @@
       // I should combine this with graphic menu and make it work for all select menu's.
       // Populate the sound asset menu
       function populateSoundList(value, index, array) {
-        var option = document.createElement('option');
-        option.setAttribute('value', index);
-        var optionLabel = document.createTextNode(value.base);
-        option.appendChild(optionLabel);
-        selectSound.appendChild(option);
+        if (value.base) {
+          var option = document.createElement('option');
+          option.setAttribute('value', index);
+          var optionLabel = document.createTextNode(value.base);
+          option.appendChild(optionLabel);
+          selectSound.appendChild(option);
+        }
       }
 
       // Populate the font menu

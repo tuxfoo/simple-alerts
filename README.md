@@ -6,13 +6,12 @@ Contributions and improvements are welcome.
 
 The goal is to be able to set up multiple alerts for any purpose for live streams.
 There will be multiple layouts and customisation options.
-The alerts will be triggered/activated by other software/scripts/bots using a rest API.
+
+This bundle is only responsible for creating and rendering alerts. The alerts will be triggered/activated by other bundles/software/scripts/bots using a rest API.
 
 ## known issues/To do
 
-* Add a "test" to the dashboard panel.
 * Make alerts fade in and out (Maybe some other animations too)
-* Correctly repopulate the sound and graphics menu after new ones have been uploaded.
 * Add form validation, incorrect values can make the alert get stuck in a loop or not work at all.
 * Create a simple tip/donation ticker (this might be better as a separate bundle).
 
