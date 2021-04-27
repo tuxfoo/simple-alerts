@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="jscolor.js"></script>
 </head>
 <body>
   <div id=alerts-wrap>
@@ -16,6 +17,7 @@
 
     NodeCG.waitForReplicants(alerts, art, sound).then(() => {
       alerts.value.forEach(showPanels);
+      jscolor.install();
     });
 
     function showPanels(value, index, array) {
@@ -42,12 +44,6 @@
       name.appendChild(nameLabel);
       var nameInput = document.createElement('input');
       nameInput.setAttribute('id', 'alert' + index + 'Name');
-      var str = document.createElement('label');
-      str.setAttribute('for', 'str' + index);
-      var strLabel = document.createTextNode("Place test message here, place keywords in curly brackets.");
-      str.appendChild(strLabel);
-      var strInput = document.createElement('input');
-      strInput.setAttribute('id', 'str' + index);
       var alertSubmit = document.createElement('button');
       alertSubmit.setAttribute('type', 'submit');
       alertSubmit.setAttribute('id', 'submitBtn' + index);
@@ -70,14 +66,16 @@
       keywordColourLabel.appendChild(document.createTextNode("Keyword Colour: "));
       var keywordColour = document.createElement('input');
       keywordColour.setAttribute('id', 'keywordColour' + index);
-      keywordColour.setAttribute('size', '7');
+      keywordColour.setAttribute('data-jscolor', '{preset:"dark large"}');
+      keywordColour.setAttribute('size', '4');
 
       var fontColourLabel = document.createElement('label');
       fontColourLabel.setAttribute('for', 'fontColour' + index);
       fontColourLabel.appendChild(document.createTextNode("Font Colour: "));
       var fontColour= document.createElement('input');
       fontColour.setAttribute('id', 'fontColour' + index);
-      fontColour.setAttribute('size', '7');
+      fontColour.setAttribute('data-jscolor', '{preset:"dark large"}');
+      fontColour.setAttribute('size', '6');
 
       var fontLabel = document.createElement('label');
       fontLabel.setAttribute('for', 'font');
@@ -135,8 +133,10 @@
       selectSoundLabel.setAttribute('for', 'select-sound' + index);
       selectSoundLabel.appendChild(document.createTextNode("Sound: "));
       selectSound.appendChild(noneOption);
+      sound.value.forEach(populateSoundList);
       sound.on('change', v => {
-        v.forEach(populateSoundList);
+        removeAllChildren('select-sound' + index);
+        //populateSoundList(sound)
       });
 
       var volumeLabel = document.createElement('label');
@@ -175,10 +175,6 @@
       // Create form for alert
       form.appendChild(name);
       form.appendChild(nameInput);
-      form.appendChild(document.createElement("br"));
-      form.appendChild(str);
-      form.appendChild(document.createElement("br"));
-      form.appendChild(strInput);
       form.appendChild(document.createElement("br"));
       form.appendChild(selectLabel);
       form.appendChild(select);
@@ -220,7 +216,6 @@
 
       // Load the saved settings
       document.getElementById('alert' + index + 'Name').value = value.name;
-      document.getElementById('str' + index).value = value.message;
       document.getElementById('duration' + index).value = toSeconds(value.duration);
       document.getElementById('select' + index).value = value.media;
       document.getElementById('selectLayout' + index).value = value.layout;
@@ -252,7 +247,6 @@
         e.preventDefault();
         console.log("Submit alert " + index)
         value.name = document.getElementById('alert' + index + 'Name').value;
-        value.message = document.getElementById('str' + index).value;
         value.duration = toMS(document.getElementById('duration' + index).value);
         value.media = document.getElementById('select' + index).value;
         value.layout = document.getElementById('selectLayout' + index).value;
@@ -291,6 +285,12 @@
         var optionLabel = document.createTextNode(value);
         option.appendChild(optionLabel);
         font.appendChild(option);
+      }
+
+      function removeAllChildren(parent) {
+        while (parent.lastElementChild) {
+          parent.removeChild(parent.lastElementChild);
+        }
       }
 
       // Conversions
