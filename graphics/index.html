@@ -59,7 +59,6 @@
 
     function animateText(word) {
       var span = document.createElement("span");
-      console.log("Colour: " + getKeywordColour(activeAlert.value));
       span.setAttribute("style", "color: " + getKeywordColour(activeAlert.value) + " ; position: relative;");
       for (var i = 0; i < word.length; i++) {
         var letter = document.createElement("span");
@@ -140,7 +139,6 @@
 
     NodeCG.waitForReplicants(alerts, activateAlert, media, sound, alertQueue).then(() => {
       console.log('messages are fully declared and ready to use!');
-
       activateAlert.on('change', value => {
         if ( alertQueue.value.length > 0 ) {
           isAlertPlaying.value = true;
@@ -157,7 +155,6 @@
           var message = getMessage(activeAlert.value);
 
           // Handle media
-          console.log(getMediaExt(activeAlert.value));
           if (getMediaExt(activeAlert.value) === ".webm") {
             console.log("Alert has media:");
             console.log("isVideo");

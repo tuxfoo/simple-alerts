@@ -49,7 +49,6 @@ module.exports = function (nodecg) {
 
 	alertQueue.on('change', value => {
 		console.log(alertQueue.value);
-		console.log(alertQueue.value.length);
 		if ( isAlertPlaying.value == false && alertQueue.value.length > 0 ) {
 			activateAlert(alertQueue.value[0]);
 			//The graphics module sets this back to false when it is finished.

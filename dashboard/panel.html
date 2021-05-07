@@ -35,7 +35,6 @@
 
       var alreadyExists = document.getElementById('alert' + index)
       const div = document.getElementById('alerts-wrap');
-      console.log("creating " + index);
       var form = document.createElement('form');
       form.setAttribute('id', 'alert' + index);
       var name = document.createElement('label');
@@ -233,7 +232,6 @@
 
       // Delete alert
       document.getElementById('deleteBtn' + index).addEventListener('click', e => {
-        console.log("remove " + index);
         alerts.value.splice(index, 1);
       });
       // show/hide alert
@@ -308,7 +306,20 @@
     }
     // Create a new alert.
     document.getElementById('newAlert').addEventListener('click', e => {
-      alerts.value.push({name: 'Alert1', message: '(name) just tipped (amount) (currency)', duration: 5000, sound: 'none', media: 'none', keywordColour: '#4FE639', fontColour: '#FFFFFF', layout: 'banner', volume: 80, customCSS: '', font: 'Palanquin', fontWeight: '800', fontSize: '64'});
+      alerts.value.push({
+        name: 'Alert1',
+        message: '(name) just tipped (amount) (currency)',
+        duration: 5000,
+        sound: 'none',
+        media: 'none',
+        keywordColour: '#4FE639',
+        fontColour: '#FFFFFF',
+        layout: 'banner',
+        volume: 80,
+        customCSS: '',
+        font: 'Palanquin',
+        fontWeight: '800',
+        fontSize: '64'});
     });
 	</script>
 </body>
