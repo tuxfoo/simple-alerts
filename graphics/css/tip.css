@@ -141,3 +141,6 @@ body[data-layout="banner"] #alert-image {
 #alert-message, #alert-user-message {
     text-align: center;
 }
+#alert-message {
+    color: white;
+}

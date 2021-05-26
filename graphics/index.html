@@ -24,9 +24,9 @@
         </div>
       <div id="alert-text-wrap">
             <div id="alert-text">
+              <div id="alert-user-message" class="animate__animated animate__tada" ></div>
               <div id="alert-message">
               </div>
-              <div id="alert-user-message" class="animate__animated animate__tada" ></div>
             </div>
         </div>
       </div>
@@ -210,6 +210,13 @@
             messageElement.appendChild(messageText);
             userMessage.appendChild(messageElement);
           }
+          if (typeof activateAlert.value.attachedMsg != 'undefined') {
+            var customMessage = document.getElementById("alert-message");
+            var messageElement = document.createElement("span");
+            var messageText = document.createTextNode(activateAlert.value.attachedMsg);
+            messageElement.appendChild(messageText);
+            customMessage.appendChild(messageElement);
+          }
           playSound(activeAlert.value);
           delay(duration - 2).then(() => {
               //Fade alert out (This is not working)
@@ -228,10 +235,12 @@
                 video2.parentNode.removeChild(video);
               }
               var msg = document.getElementById('alert-user-message');
+              var attachedMsg = document.getElementById('alert-message');
               var graphic = document.getElementById('alert-image');
               graphic.setAttribute("style", "background-image: none;");
               removeAllChildren(msg);
               removeAllChildren(graphic);
+              removeAllChildren(attachedMsg);
               css.textContent = '';
               console.log("HIDE");
               isAlertPlaying.value = false;

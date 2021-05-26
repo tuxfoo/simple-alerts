@@ -27,7 +27,11 @@ module.exports = function (nodecg) {
 				if ( value.name == alertName ) {
 					console.log(value.message);
 					// Add message to Queue
-					alertQueue.value.push({message: message, alert: index});
+					if (typeof req.body.attachedMsg != 'undefined') {
+						alertQueue.value.push({message: message, attachedMsg: req.body.attachedMsg, alert: index});
+					} else {
+						alertQueue.value.push({message: message, alert: index});
+					}
 				}
 			}
 	});
@@ -37,14 +41,19 @@ module.exports = function (nodecg) {
 	function activateAlert(message) {
 			const activate = nodecg.Replicant('activateAlert');
 			const activeAlert = nodecg.Replicant('activeAlert');
+			var change = false;
 			// Bool alway's changes, in case message's are the same.
 			if (activate.value.activate == true ) {
-				activate.value.activate = false;
+				change = false;
 			} else {
-				activate.value.activate = true;
+				change = true;
 			}
 			activeAlert.value = message.alert;
-			activate.value.message = message.message;
+			if (typeof message.attachedMsg != 'undefined') {
+				activate.value = { message: message.message, attachedMsg: message.attachedMsg, alert: message.alert, activate: change};
+			} else {
+				activate.value = { message: message.message, alert: message.alert, activate: change};
+			}
 	}
 
 	alertQueue.on('change', value => {
