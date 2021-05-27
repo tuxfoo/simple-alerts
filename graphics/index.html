@@ -24,7 +24,7 @@
         </div>
       <div id="alert-text-wrap">
             <div id="alert-text">
-              <div id="alert-user-message" class="animate__animated animate__tada" ></div>
+              <div id="alert-user-message" ></div>
               <div id="alert-message">
               </div>
             </div>
@@ -140,6 +140,30 @@
     NodeCG.waitForReplicants(alerts, activateAlert, media, sound, alertQueue).then(() => {
       console.log('messages are fully declared and ready to use!');
       activateAlert.on('change', value => {
+        const animateCSS = (element, animation, prefix = 'animate__') =>
+          // We create a Promise and return it
+          new Promise((resolve, reject) => {
+            const animationName = `${animation}`;
+            const node = element;
+            node.classList.remove(`${prefix}animated`, 'animate__bounceOut',  'animate__slow');
+            node.classList.add(`${prefix}animated`, animationName, 'animate__slow');
+
+            // When the animation ends, we clean the classes and resolve the Promise
+            function handleAnimationEnd(event) {
+              event.stopPropagation();
+              node.classList.remove(`${prefix}animated`, animationName, 'animate__slow');
+              resolve('Animation ended');
+              setTimeout(function() {
+                node.classList.add(`${prefix}animated`, 'animate__bounceOut',  'animate__slow');
+              }, getDuration(activeAlert.value));
+              setTimeout(function() {
+                cleanUp();
+              }, getDuration(activeAlert.value) + 1000);
+
+            }
+            node.addEventListener('animationend', handleAnimationEnd, {once: true});
+          });
+
         if ( alertQueue.value.length > 0 ) {
           isAlertPlaying.value = true;
           // Should add a isAlertPlaying function to queue alerts.
@@ -163,7 +187,8 @@
             video.setAttribute("autoplay", "autoplay");
             video.setAttribute("muted", "muted");
             video.setAttribute("loop", "loop");
-            video.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
+            animateCSS(video, "animate__fadeIn");
+            //video.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
             video.setAttribute("src", getMediaURL(activeAlert.value));
             document.getElementById('alert-image').appendChild(video);
             document.getElementById('webm-video').play();
@@ -171,7 +196,8 @@
             var image = document.createElement("img");
             var imageElement = document.getElementById("alert-image");
             imageElement.setAttribute("style", "background-image: " + "url(\"" + getMediaURL(activeAlert.value) + "\");");
-            image.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
+            animateCSS(image, "animate__fadeIn");
+            //image.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
             image.setAttribute("src", getMediaURL(activeAlert.value));
             document.getElementById('alert-image').appendChild(image);
           }
@@ -180,8 +206,10 @@
           var re = /\(.*?\)/g;
           var keywords = message.matchAll(re);
           var userMessage = document.getElementById('alert-user-message');
+
           userMessage.setAttribute('style', 'color: ' + getColour(activeAlert.value) + '; font-size: ' + getFontSize(activeAlert.value) + 'px; font-family: ' + getFont(activeAlert.value) + ' ; font-weight: ' + getFontWeight(activeAlert.value) + ';');
-          userMessage.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
+          animateCSS(userMessage, "animate__tada");
+          //userMessage.setAttribute("class", "animate__animated animate__fadeIn animate__slow");
           var lastKeyword = 0;
           var count = 0;
           for ( var keyword of keywords ) {
@@ -216,37 +244,9 @@
             var messageText = document.createTextNode(activateAlert.value.attachedMsg);
             messageElement.appendChild(messageText);
             customMessage.appendChild(messageElement);
+            animateCSS(customMessage, "animate__tada");
           }
           playSound(activeAlert.value);
-          delay(duration - 2).then(() => {
-              //Fade alert out (This is not working)
-              userMessage.removeAttribute("class");
-              userMessage.setAttribute ("class", "animate__animated animate__bounceOut");
-              image.removeAttribute("class");
-              image.setAttribute ("class", "animate__animated animate__bounceOut");
-              video.removeAttribute("class");
-              video.setAttribute ("class", "animate__animated animate__bounceOut");
-          });
-          sleep(duration).then(() => {
-              //clearMessage(activateAlert.value);
-              div.style.display = "none";
-              if (getMediaExt(activeAlert.value) === ".webm") {
-                var video2 = document.getElementById('webm-video');
-                video2.parentNode.removeChild(video);
-              }
-              var msg = document.getElementById('alert-user-message');
-              var attachedMsg = document.getElementById('alert-message');
-              var graphic = document.getElementById('alert-image');
-              graphic.setAttribute("style", "background-image: none;");
-              removeAllChildren(msg);
-              removeAllChildren(graphic);
-              removeAllChildren(attachedMsg);
-              css.textContent = '';
-              console.log("HIDE");
-              isAlertPlaying.value = false;
-              //Remove from Queue
-              alertQueue.value.splice(0, 1);
-          });
 
           function removeAllChildren(parent) {
             while (parent.firstChild) {
@@ -260,6 +260,25 @@
               audio.volume = getVolume(ind) / 100;
               audio.play();
             }
+          }
+          function cleanUp() {
+            div.style.display = "none";
+            if (getMediaExt(activeAlert.value) === ".webm") {
+              var video2 = document.getElementById('webm-video');
+              video2.parentNode.removeChild(video);
+            }
+            var msg = document.getElementById('alert-user-message');
+            var attachedMsg = document.getElementById('alert-message');
+            var graphic = document.getElementById('alert-image');
+            graphic.setAttribute("style", "background-image: none;");
+            removeAllChildren(msg);
+            removeAllChildren(graphic);
+            removeAllChildren(attachedMsg);
+            css.textContent = '';
+            console.log("HIDE");
+            isAlertPlaying.value = false;
+            //Remove from Queue
+            alertQueue.value.splice(0, 1);
           }
         }
       });
