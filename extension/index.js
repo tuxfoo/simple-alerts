@@ -27,8 +27,8 @@ module.exports = function (nodecg) {
 				if ( value.name == alertName ) {
 					console.log(value.message);
 					// Add message to Queue
-					if (typeof req.body.attachedMsg != 'undefined') {
-						alertQueue.value.push({message: message, attachedMsg: req.body.attachedMsg, alert: index});
+					if (typeof req.body.attachMsg != 'undefined') {
+						alertQueue.value.push({message: message, attachedMsg: req.body.attachMsg, alert: index});
 					} else {
 						alertQueue.value.push({message: message, alert: index});
 					}

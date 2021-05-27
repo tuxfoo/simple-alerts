@@ -25,7 +25,7 @@ curl -X POST -H "Content-Type:application/json" http://localhost:9090/simple-ale
 ```
 You can attach a message using "attachMsg"  eg;
 ```
-curl -X POST -H "Content-Type:application/json" http://localhost:9090/simple-alerts/alert -d '{"name":"alertname", "message":"(Billy) tipped (20) LBC, "attachMsg": "That was awesome"}'
+curl -X POST -H "Content-Type:application/json" http://localhost:9090/simple-alerts/alert -d '{"name":"alertname", "message":"(Billy) tipped (20) LBC", "attachMsg": "That was awesome"}'
 ```
 
 ## How to send an alert using invoke-webrequest (WINDOWS PowerShell)
